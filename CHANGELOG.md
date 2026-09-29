@@ -4,6 +4,12 @@ Versions follow [semantic versioning](https://semver.org): `MAJOR.MINOR.PATCH`.
 The version lives in `playblast_frames/__init__.py` as `__version__` and is
 shown in the window title.
 
+## 2.0.1
+
+- Fixed **Add** (and double-click, Add all, Enter) doing nothing in 2.0.0: the
+  queue table was handed a list item, so each add left a blank row with no
+  camera or frame and raised an error in the Script Editor.
+
 ## 2.0.0
 
 - Each queued camera has its own frame. The queue is a Camera | Frame table;
