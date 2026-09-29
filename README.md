@@ -1,4 +1,4 @@
-# Playblast Frames 2.0.1
+# Playblast Frames 2.0.2
 
 Maya tool for capturing single-frame playblasts of a character from many shot
 cameras at once, each camera at its own frame.

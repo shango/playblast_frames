@@ -4,6 +4,11 @@ Versions follow [semantic versioning](https://semver.org): `MAJOR.MINOR.PATCH`.
 The version lives in `playblast_frames/__init__.py` as `__version__` and is
 shown in the window title.
 
+## 2.0.2
+
+- The queue's Frame column is wide enough for frame numbers like 1001; it
+  was sized to the header text and cut four-digit frames off.
+
 ## 2.0.1
 
 - Fixed **Add** (and double-click, Add all, Enter) doing nothing in 2.0.0: the

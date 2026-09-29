@@ -119,6 +119,12 @@ def write_queue_file(character, shots):
         print("Playblast Frames: could not write %s (%s)" % (path, error))
 
 
+def _frame_spin_box():
+    spin = QtWidgets.QSpinBox()
+    spin.setRange(-1000000, 1000000)
+    return spin
+
+
 def _current_frame():
     return int(round(cmds.currentTime(query=True)))
 
@@ -168,9 +174,12 @@ class PlayblastFramesWindow(QtWidgets.QDialog):
         self.queue.horizontalHeader().setSectionResizeMode(
             0, QtWidgets.QHeaderView.Stretch
         )
+        # ResizeToContents only measures the header text, not the spin boxes,
+        # so size the column to a spin box, which is wide enough for its range.
         self.queue.horizontalHeader().setSectionResizeMode(
-            1, QtWidgets.QHeaderView.ResizeToContents
+            1, QtWidgets.QHeaderView.Fixed
         )
+        self.queue.setColumnWidth(1, _frame_spin_box().sizeHint().width())
         self.current_frame_button = QtWidgets.QPushButton("Set to current frame")
         self.current_frame_button.setToolTip(
             "Set the selected cameras to the time slider's current frame"
@@ -381,8 +390,7 @@ class PlayblastFramesWindow(QtWidgets.QDialog):
             item = QtWidgets.QTableWidgetItem(capture.short_name(camera))
             item.setData(QtCore.Qt.UserRole, camera)
             self.queue.setItem(row, 0, item)
-            spin = QtWidgets.QSpinBox()
-            spin.setRange(-1000000, 1000000)
+            spin = _frame_spin_box()
             spin.setValue(frame)
             spin.valueChanged.connect(self._save)
             self.queue.setCellWidget(row, 1, spin)
