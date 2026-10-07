@@ -24,16 +24,17 @@ PASSES = (
         },
         None,
     ),
-    # Neutral grey lambert so the wireframe reads cleanly over it.
+    # Plain grey blinn with its specular turned off, so the form reads
+    # without the character's own shading.
     (
-        "wireOnShaded",
-        "Wireframe on Shaded",
+        "shaded",
+        "Shaded",
         {
-            "wireframeOnShaded": True,
+            "wireframeOnShaded": False,
             "useDefaultMaterial": False,
             "displayTextures": False,
         },
-        "lambert",
+        "blinn",
     ),
     # A useBackground shader on the character draws its surface as the plate
     # behind it, but it still hides back-facing wires.
@@ -46,6 +47,19 @@ PASSES = (
             "displayTextures": False,
         },
         "useBackground",
+    ),
+    # The image plane on its own: the character's surfaces are hidden, so it
+    # runs last and the passes above never need them turned back on.
+    (
+        "plate",
+        "Plate",
+        {
+            "wireframeOnShaded": False,
+            "polymeshes": False,
+            "nurbsSurfaces": False,
+            "subdivSurfaces": False,
+        },
+        None,
     ),
 )
 
@@ -229,6 +243,8 @@ def _capture_panel(width, height):
 def _assign_shader(shapes, shader_type):
     """Assign a new shader of shader_type to shapes. Call inside _undone_after."""
     shader = cmds.shadingNode(shader_type, asShader=True)
+    if shader_type == "blinn":
+        cmds.setAttr(shader + ".specularColor", 0, 0, 0, type="double3")
     group = cmds.sets(renderable=True, noSurfaceShader=True, empty=True)
     cmds.connectAttr(shader + ".outColor", group + ".surfaceShader")
     cmds.sets(shapes, edit=True, forceElement=group)

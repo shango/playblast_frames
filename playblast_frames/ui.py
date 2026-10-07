@@ -21,8 +21,9 @@ PASSES_OPTION_VAR = "playblastFramesPasses"
 
 # Checkbox label for each capture.PASSES suffix, in the order they are shown.
 PASS_LABELS = (
+    ("plate", "Plate"),
     ("wire", "Wireframe"),
-    ("wireOnShaded", "Shaded"),
+    ("shaded", "Shaded"),
     ("material", "Material"),
 )
 

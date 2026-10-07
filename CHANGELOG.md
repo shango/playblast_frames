@@ -4,6 +4,17 @@ Versions follow [semantic versioning](https://semver.org): `MAJOR.MINOR.PATCH`.
 The version lives in `playblast_frames/__init__.py` as `__version__` and is
 shown in the window title.
 
+## 2.1.0
+
+- New **Plate** pass (`plate`): the camera's image plane on its own, with the
+  character hidden.
+- The Shaded pass is now just the grey lambert, with no wireframe drawn over
+  it, and is written as `shaded` instead of `wireOnShaded`.
+- The Shaded pass uses a grey blinn with its specular turned off instead of
+  a lambert.
+- Each camera now writes up to four images: Plate, Wireframe, Shaded and
+  Material.
+
 ## 2.0.3
 
 - The Shaded (`wireOnShaded`) pass puts a plain grey lambert on the character
