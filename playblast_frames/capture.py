@@ -8,10 +8,10 @@ import maya.cmds as cmds
 from . import burnin
 
 
-# (filename suffix, burn-in label, modelEditor settings, use background shader)
+# (filename suffix, burn-in label, modelEditor settings, shader type or None)
 # for each pass that can be written per camera. Passes run in this order, and
-# the useBackground shader stays on the character once assigned, so passes
-# that use it must come last.
+# a shader stays on the character once assigned, so the material pass, which
+# needs the character's own shaders, must come first.
 PASSES = (
     # The character's own shaders and textures.
     (
@@ -22,7 +22,7 @@ PASSES = (
             "useDefaultMaterial": False,
             "displayTextures": True,
         },
-        False,
+        None,
     ),
     # Neutral grey lambert so the wireframe reads cleanly over it.
     (
@@ -30,10 +30,10 @@ PASSES = (
         "Wireframe on Shaded",
         {
             "wireframeOnShaded": True,
-            "useDefaultMaterial": True,
+            "useDefaultMaterial": False,
             "displayTextures": False,
         },
-        False,
+        "lambert",
     ),
     # A useBackground shader on the character draws its surface as the plate
     # behind it, but it still hides back-facing wires.
@@ -45,7 +45,7 @@ PASSES = (
             "useDefaultMaterial": False,
             "displayTextures": False,
         },
-        True,
+        "useBackground",
     ),
 )
 
@@ -157,7 +157,7 @@ def _undone_after(shapes, color):
     """Undo every scene edit made inside the block when it exits.
 
     Also gives the character's surfaces the one wireframe colour the user
-    picked, unless color is None. The colour and _use_background both write
+    picked, unless color is None. The colour and _assign_shader both write
     to the scene, but they are undoable, so one undo restores exactly what
     each object had before - its shading assignments, including per-face ones,
     and any wireframe colour override it already carried.
@@ -226,9 +226,9 @@ def _capture_panel(width, height):
         cmds.deleteUI(window, window=True)
 
 
-def _use_background(shapes):
-    """Assign a new useBackground shader to shapes. Call inside _undone_after."""
-    shader = cmds.shadingNode("useBackground", asShader=True)
+def _assign_shader(shapes, shader_type):
+    """Assign a new shader of shader_type to shapes. Call inside _undone_after."""
+    shader = cmds.shadingNode(shader_type, asShader=True)
     group = cmds.sets(renderable=True, noSurfaceShader=True, empty=True)
     cmds.connectAttr(shader + ".outColor", group + ".surfaceShader")
     cmds.sets(shapes, edit=True, forceElement=group)
@@ -280,11 +280,11 @@ def capture_batch(
         with _anti_aliasing(), _undone_after(
             shapes, wireframe_color
         ), _capture_panel(width, height) as panel:
-            for suffix, label, settings, use_background in PASSES:
+            for suffix, label, settings, shader_type in PASSES:
                 if passes is not None and suffix not in passes:
                     continue
-                if use_background:
-                    _use_background(shapes)
+                if shader_type:
+                    _assign_shader(shapes, shader_type)
                 cmds.modelEditor(panel, edit=True, **settings)
                 for camera, frame in shots:
                     cmds.modelEditor(panel, edit=True, camera=camera)

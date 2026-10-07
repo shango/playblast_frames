@@ -4,6 +4,11 @@ Versions follow [semantic versioning](https://semver.org): `MAJOR.MINOR.PATCH`.
 The version lives in `playblast_frames/__init__.py` as `__version__` and is
 shown in the window title.
 
+## 2.0.3
+
+- The Shaded (`wireOnShaded`) pass puts a plain grey lambert on the character
+  instead of Maya's viewport default material.
+
 ## 2.0.2
 
 - The queue's Frame column is wide enough for frame numbers like 1001; it

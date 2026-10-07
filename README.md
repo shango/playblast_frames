@@ -1,11 +1,11 @@
-# Playblast Frames 2.0.2
+# Playblast Frames 2.0.3
 
 Grab quick 4K viewport stills of your character from lots of shot cameras at
 once, each camera on its own frame. Needs Maya 2025 or newer.
 
 ## Install
 
-1. Unzip `playblast_frames_2.0.2.zip`.
+1. Unzip `playblast_frames_2.0.3.zip`.
 2. Drag `install.py` into a Maya viewport.
 
 That's it. You get a **PBFrames** button on your current shelf, and the tool
@@ -27,7 +27,7 @@ One image per camera per pass, showing just the character over the image
 plate:
 
 - `cam080_wire.png` is the wireframe over the plate, with no back-facing wires.
-- `cam080_wireOnShaded.png` is the wireframe on grey shading.
+- `cam080_wireOnShaded.png` is the wireframe on a grey lambert.
 - `cam080_material.png` is the character with its own materials.
 
 Each image has the rig, camera and pass written along the bottom.
